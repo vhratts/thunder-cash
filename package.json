@@ -24,8 +24,11 @@
   },
   "homepage": "https://github.com/vhratts/thunder-cash#readme",
   "dependencies": {
+    "axios": "^1.7.7",
+    "axios-cookiejar-support": "^5.0.3",
     "next": "^14.2.15",
     "react": "^18.3.1",
-    "react-dom": "^18.3.1"
+    "react-dom": "^18.3.1",
+    "tough-cookie": "^5.0.0"
   }
 }
