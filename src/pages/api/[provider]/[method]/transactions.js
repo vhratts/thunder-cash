@@ -6,7 +6,7 @@ export default async (req, res) => {
       var provider = UtilsController.HelperProvider(req);
       // Definindo o cabeçalho Cache-Control com stale-while-revalidate
       res.setHeader("Cache-Control", "s-maxage=60, stale-while-revalidate=60");
-      res.status(200).json(await provider.createQrCode(req.body));
+      res.status(200).json(await provider.getTransactions(req.body));
     } else {
       // Se não for POST, retorna erro 405 (Method Not Allowed)
       res.setHeader("Allow", ["POST"]);

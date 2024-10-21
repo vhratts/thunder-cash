@@ -1,4 +1,4 @@
-import {
+import ThunderPix, {
   MercadoPagoProvider,
   PicPayProvider,
   PixProvider,
@@ -53,7 +53,7 @@ export default {
       authItens: ["token", "isTest"],
       info: new PicPayProvider({
         token: null,
-        isTest: null
+        isTest: null,
       }).providerInfo,
     },
   ],
@@ -82,5 +82,30 @@ export default {
     }
 
     return response;
+  },
+
+  HelperProvider(req) {
+    var authKeys = this.filterAdaptor(req.headers);
+    var gateway = this.suportedProviders
+      .filter((value) => {
+        if (value.name == req.query.provider) {
+          if (value.methods.includes(req.query.method)) {
+            return true;
+          }
+        }
+
+        return false;
+      })
+      .map((mp) => {
+        for (var item of mp.authItens) {
+          mp[item] = req.headers[item];
+        }
+
+        return mp;
+      })[0];
+
+      var ConstructProvider = new gateway.provider(authKeys);
+
+    return new ThunderPix(ConstructProvider);
   },
 };
