@@ -1,4 +1,4 @@
-import UtilsController from "../../../../controllers/UtilsController";
+import UtilsController from "../../../../../controllers/UtilsController";
 
 export default async (req, res) => {
   try {
