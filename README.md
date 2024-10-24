@@ -152,6 +152,9 @@ Lista de provedores suportados na versão mais atual
 | Primepag                | Primepag         | pix     | `api/Primepag/pix`    |
 | Mercado Pago SA         | MercadoPago      | pix     | `api/MercadoPago/pix` |
 | PicPay SA               | PicPay           | pix     | `api/PicPay/pix`      |
+| Pagar-me                | Pagarme          | pix     | `api/Pagarme/pix`     |
+| OpenPix SA              | OpenPix          | pix     | `api/OpenPix/pix`     |
+| Cielo                   | Cielo            | pix     | `api/Cielo/pix`       |
 
 > - IMPORTANTE: Ao decorrer do desenvolvimento deste serviço essa tabela pode ser modificada, adicionando ou removendo **Metodos e provedores de pagamento**
 
@@ -241,7 +244,7 @@ import axios from "axios";
 
 Retorno esperado da chamada:
 
-```json
+```js
 {
   "qrcode": "base64data:image/png;base64...", // imagem no formato Base64
   "pixkey": "00020101021226930014br.gov.bcb....", //Chave Pi Copia-e-cola
@@ -257,6 +260,127 @@ Retorno esperado da chamada:
     "iso": "2024-10-24T00:28:49.000Z" // Data/Hora formato ISO
   },
   "code": "kk6g232xel65a0daee4dd13kk4000119195" // Codigo Unico
+}
+```
+
+## Listando Transações
+
+### QrCodes (entradas)
+
+Para listar os QrCodes Gerados pelo provedor de pagamento, é necessario efetuar uma chamada `GET` simples passando as credenciais de autenticação do seu provedor.
+
+> - IMPORTANT: Sempre passe a flag "type" como "input" caso queira oter apenas as transações de entrada.
+
+```js
+import axios from "axios";
+
+(async () => {
+  var { data } = await axios.get(
+    "http://localhost:3000/api/[provider]/[method]/read/transactions?type=input",
+    {
+      headers: {
+        /**
+         * Chaves de autenticação aqui
+         * utilize o formato de objeto chave: valor
+         * em um dos formatos abaixo
+         * - token
+         * - basic
+         * - clientid
+         * - clientsecret
+         * - pixkey
+         */
+        token: "7c5fsda1-...",
+      },
+    }
+  );
+
+  console.log(data);
+})();
+```
+
+> Se precisar de um filtro mais especifico, como filtro de data por exemplo, você pode efetuar uma chamada `POST` para a mesma rota, passando como corpo:
+
+```json
+{
+  "page": 1, // Numero da pagina consultada.
+  "registrationDateStart": "2024-10-01T00:00:00Z", // Data/hora inicial do filtro em Formato ISO.
+  "registrationDateEnd": "2024-10-24T00:00:00Z" // Data/hora final do filtro em Formato ISO.
+}
+```
+
+A chamada retorna um json com um array contendo os itens solicitados pela consulta.
+
+```js
+[
+  // ...
+  {
+    referenceCode: "5dda700c96475b8...",
+    valueCents: 4999,
+    content: "00020126870014br.gov.bcb....",
+    status: "awaiting_payment", // Os metodos de status variam de provedor para provedor.
+    generatorName: null,
+    generatorDocument: null,
+    payerName: null,
+    payerDocument: null,
+    registrationDate: "2024-10-20T13:22:59.000-03:00",
+    paymentDate: null,
+    endToEnd: null,
+  },
+  // ...
+];
+```
+
+### Pagamentos (saídas)
+
+> - IMPORTANTE: Essa funcionalidade depende do provedor de pagamento que voce escolher. alguns provedores não suportam a função de `Saque` ou `Transferência` por API. Portanto, considere colsultar [a tabela de provedores e suporte](https://github.com/vhratts/thunderpix?tab=readme-ov-file#provedores-de-pagamento-suportados) para saer se seu provedor suporta essa função
+
+Para efetuar um saque, trasferência ou retirada a partir do provedor de sua escolha,
+efetue uma chamada `POST` passando no corpo, as informações para o saque.
+
+```js
+import axios from "axios";
+
+(async () => {
+  var { data } = await axios.post(
+    "http://localhost:3000/api/[provider]/[method]/create/transaction",
+    {
+      initiationType: "dict", // escolha entre 'dict' para automatico ou 'manual'
+      idempotentId: "67017be8-...-e687aa450cfd", // Chave ou codigo unico gerado pelo seu sistem
+      valueCents: 1400, // Valor em centavos que deseja transferir (R$ 14,00)
+      receiverName: "Victor ... Ratts", // Nome do beneficiario
+      receiverDocument: "057...60", // Documento do beneficiario
+      pixKeyType: "cpf", // tipo do documento
+      pixKey: "057...60", // chave PIX
+      authorized: true, // Autorização automatica (Caso seu provedor suporte)
+    },
+    {
+      /**
+       * Insira as credências do seu
+       * provedor de pagamento
+       */
+      headers: {
+        clientId: "ac536f63-...",
+        clientSecret: "38da4a8d-...",
+      },
+    }
+  );
+
+  console.log(data);
+})();
+```
+
+Caso tudo tenha ocorrido certo, chamada executa a seguinte resposta:
+
+```json
+{
+  "idempotent_id": "67017be8-8f88-8001-8b65-e687aa450cfd",
+  "value_cents": 1400,
+  "receiver_name": "Victor...Ratts",
+  "receiver_document": "057...60",
+  "pix_key": "057...60",
+  "pix_key_type": "cpf",
+  "reference_code": "PE2024...96942",
+  "status": "completed"
 }
 ```
 

@@ -67,7 +67,7 @@ export default {
       authType: "basic",
       authItens: ["apiKey"],
       info: new PagarMeProvider({
-        apiKey: null
+        apiKey: null,
       }).providerInfo,
     },
     {
@@ -143,8 +143,23 @@ export default {
         return mp;
       })[0];
 
-      var ConstructProvider = new gateway.provider(authKeys);
+    var ConstructProvider = new gateway.provider(authKeys);
 
     return new ThunderPix(ConstructProvider);
+  },
+
+  calcDate(dias) {
+    // Pega a data atual
+    const dataAtual = new Date();
+
+    // Adiciona ou subtrai os dias
+    dataAtual.setDate(dataAtual.getDate() + dias);
+
+    // Formata a data para YYYY-MM-DD
+    const ano = dataAtual.getFullYear();
+    const mes = String(dataAtual.getMonth() + 1).padStart(2, "0"); // Os meses são baseados em 0
+    const dia = String(dataAtual.getDate()).padStart(2, "0");
+
+    return `${ano}-${mes}-${dia}`;
   },
 };

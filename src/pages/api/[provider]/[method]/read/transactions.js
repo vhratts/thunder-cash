@@ -9,20 +9,23 @@ export default async (req, res) => {
     if (!req.query.type) {
       req.query.type = "input";
     }
-    
+
     if (!req.query.options) {
       req.query.options = {
         page: 1,
-        registrationDateStart: null,
-        registrationDateEnd: null,
+        registrationDateStart: new Date(UtilsController.calcDate(-7)).toISOString(),
+        registrationDateEnd: new Date().toISOString(),
       };
     }
 
+    // console.log(req.query);
+
     res.status(200).json(await provider.getTransactions(req.query));
   } catch (error) {
-    res.status(500).json({
+    res.status(error.status).json({
       status: false,
       message: error.message,
+      verbouse: error.response.data,
     });
   }
 };

@@ -10,6 +10,8 @@ export default async (req, res) => {
     res.status(500).json({
       status: false,
       message: error.message,
+      verbouse: error.response.data
+
     });
   }
 };
