@@ -20,7 +20,7 @@ API para padronização de provedores de pagamentos PiX
 
 ## introdução
 
-Este é um projeto de codigo aberto que tem como base a bilioteca [ThunderPix](https://www.npmjs.com/package/thunderpix) que padroniza as APIs dos maiores provedores e gateways de pagameto nacionais. O projeto tem como objetivo, fornecer uma interface simples para desenvolvimento de aplicações q utilizem uma das [APIs listadas](https://github.com/vhratts/thunderpix?tab=readme-ov-file#provedores-de-pagamento-suportados)
+Este é um projeto de codigo aberto que tem como base a biblioteca [ThunderPix](https://www.npmjs.com/package/thunderpix) que padroniza as APIs dos maiores provedores e gateways de pagameto nacionais. O projeto tem como objetivo, fornecer uma interface simples para desenvolvimento de aplicações q utilizem uma das [APIs listadas](https://github.com/vhratts/thunderpix?tab=readme-ov-file#provedores-de-pagamento-suportados)
 
 ## Instalação
 
