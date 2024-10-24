@@ -1,9 +1,12 @@
 import ThunderPix, {
   MercadoPagoProvider,
+  OpenPixProvider,
+  PagarMeProvider,
   PicPayProvider,
   PixProvider,
   PrimepagProvider,
 } from "thunderpix";
+import CieloPixProvider from "thunderpix/dist/providers/pix/CieloProvider";
 
 /**
  * Utilitarios do sistema.
@@ -54,6 +57,42 @@ export default {
       info: new PicPayProvider({
         token: null,
         isTest: null,
+      }).providerInfo,
+    },
+    {
+      id: 5,
+      name: "Pagarme",
+      methods: ["pix"],
+      provider: PagarMeProvider,
+      authType: "basic",
+      authItens: ["apiKey"],
+      info: new PagarMeProvider({
+        apiKey: null
+      }).providerInfo,
+    },
+    {
+      id: 6,
+      name: "Cielo",
+      methods: ["pix"],
+      provider: CieloPixProvider,
+      authType: "basic",
+      authItens: ["clientId", "clientSecret", "isTest"],
+      info: new CieloPixProvider({
+        clientId: null,
+        clientSecret: null,
+        isTest: true,
+      }).providerInfo,
+    },
+    {
+      id: 7,
+      name: "OpenPix",
+      methods: ["pix"],
+      provider: OpenPixProvider,
+      authType: "basic",
+      authItens: ["apiKey", "isTest"],
+      info: new OpenPixProvider({
+        apiKey: null,
+        isTest: true,
       }).providerInfo,
     },
   ],
