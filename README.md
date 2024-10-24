@@ -263,6 +263,85 @@ Retorno esperado da chamada:
 }
 ```
 
+## Buscando QrCode
+
+Caso precise buscar / consultar um QrCode gerado, utilize a chave de referência ou ```code``` gerado pelo seu provedor de pagamento. 
+
+Para Efetuar uma consulta de QrCode, efetue uma chamada ```GET``` passando como parametro **query** a chave ```reference``` com valor ```code```.
+
+
+```js
+import axios from "axios";
+
+(async () => {
+  var { data } = await axios.get(
+    "http://localhost:3000/api/[provider]/[method]/read/qrcodes?reference=kk6g232xel65a0daee4dd13kk4000119195",
+    {
+      headers: {
+        /**
+         * Chaves de autenticação aqui
+         * utilize o formato de objeto chave: valor
+         * em um dos formatos abaixo
+         * - token
+         * - basic
+         * - clientid
+         * - clientsecret
+         * - pixkey
+         */
+        token: "7c5fsda1-...",
+      },
+    }
+  );
+
+  console.log(data);
+})();
+
+```
+
+O retorno esperado da chamada caso o pagamento ainda não tenha sido processado:
+
+```js
+{
+  "referenceCode": "kk6g232xel65a0daee4dd13kk4000119195",
+  "valueCents": 5945,
+  "content": "00020126870014br.gov.bcb....",
+  "status": "awaiting_payment",
+  "generatorName": null,
+  "generatorDocument": null,
+  "payerName": null,
+  "payerDocument": null,
+  "payerBankName": null,
+  "payerAgency": null,
+  "payerAccount": null,
+  "payerAccountType": null,
+  "registrationDate": "2024-10-20T13:22:59.000-03:00",
+  "paymentDate": null,
+  "endToEnd": null
+}
+```
+
+O retorno esperado da chamada após o pagamento ter sido processado:
+
+```js
+{
+  "referenceCode": "kk6g232xel65a0daee4dd13kk4000119195",
+  "valueCents": 5945,
+  "content": "00020126870014br.gov.bcb....",
+  "status": "complete",
+  "generatorName": "Victor...Ratts",
+  "generatorDocument": "057...60",
+  "payerName": "Roberto...Silva",
+  "payerDocument": "018...50",
+  "payerBankName": "Nubank SA",
+  "payerAgency": "0001",
+  "payerAccount": "023...99",
+  "payerAccountType": "debit",
+  "registrationDate": "2024-10-20T13:22:59.000-03:00",
+  "paymentDate": "2024-10-20T13:31:20.000-03:00",
+  "endToEnd": "0221aca45c4a41b46bf8cda8c18a74"
+}
+```
+
 ## Listando Transações
 
 ### QrCodes (entradas)
@@ -331,6 +410,71 @@ A chamada retorna um json com um array contendo os itens solicitados pela consul
 ```
 
 ### Pagamentos (saídas)
+
+Para listar as saídas, saques ou retiradas gerados pelo provedor de pagamento, é necessario efetuar uma chamada `GET` simples passando as credenciais de autenticação do seu provedor.
+
+> - IMPORTANT: Sempre passe a flag "type" como "output" caso queira oter apenas as transações de saída.
+
+```js
+import axios from "axios";
+
+(async () => {
+  var { data } = await axios.get(
+    "http://localhost:3000/api/[provider]/[method]/read/transactions?type=output",
+    {
+      headers: {
+        /**
+         * Chaves de autenticação aqui
+         * utilize o formato de objeto chave: valor
+         * em um dos formatos abaixo
+         * - token
+         * - basic
+         * - clientid
+         * - clientsecret
+         * - pixkey
+         */
+        token: "7c5fsda1-...",
+      },
+    }
+  );
+
+  console.log(data);
+})();
+```
+
+> Se precisar de um filtro mais especifico, como filtro de data por exemplo, você pode efetuar uma chamada `POST` para a mesma rota, passando como corpo:
+
+```json
+{
+  "page": 1, // Numero da pagina consultada.
+  "registrationDateStart": "2024-10-01T00:00:00Z", // Data/hora inicial do filtro em Formato ISO.
+  "registrationDateEnd": "2024-10-24T00:00:00Z" // Data/hora final do filtro em Formato ISO.
+}
+```
+
+A chamada retorna um json com um array contendo os itens solicitados pela consulta.
+
+```js
+[
+  // ...
+  {
+    referenceCode: "5dda700c96475b8...",
+    valueCents: 4999,
+    content: "00020126870014br.gov.bcb....",
+    status: "awaiting_payment", // Os metodos de status variam de provedor para provedor.
+    generatorName: null,
+    generatorDocument: null,
+    payerName: null,
+    payerDocument: null,
+    registrationDate: "2024-10-20T13:22:59.000-03:00",
+    paymentDate: null,
+    endToEnd: null,
+  },
+  // ...
+];
+```
+
+## Saque / Retirada (saídas)
 
 > - IMPORTANTE: Essa funcionalidade depende do provedor de pagamento que voce escolher. alguns provedores não suportam a função de `Saque` ou `Transferência` por API. Portanto, considere colsultar [a tabela de provedores e suporte](https://github.com/vhratts/thunderpix?tab=readme-ov-file#provedores-de-pagamento-suportados) para saer se seu provedor suporta essa função
 
