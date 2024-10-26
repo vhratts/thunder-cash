@@ -149,12 +149,14 @@ Lista de provedores suportados na versão mais atual
 | Nome do provedor        | Slug do Provedor | Metodos | chamadas              |
 | ----------------------- | ---------------- | ------- | --------------------- |
 | Banco Central do Brasil | Bacem            | pix     | `api/Bacem/pix`       |
-| Primepag                | Primepag         | pix     | `api/Primepag/pix`    |
+| Banco Primepag          | Primepag         | pix     | `api/Primepag/pix`    |
 | Mercado Pago SA         | MercadoPago      | pix     | `api/MercadoPago/pix` |
 | PicPay SA               | PicPay           | pix     | `api/PicPay/pix`      |
 | Pagar-me                | Pagarme          | pix     | `api/Pagarme/pix`     |
 | OpenPix SA              | OpenPix          | pix     | `api/OpenPix/pix`     |
 | Cielo                   | Cielo            | pix     | `api/Cielo/pix`       |
+| Asaas                   | Asaas            | pix     | `api/Asaas/pix`       |
+| Zendry                  | Zendry           | pix     | `api/Zendry/pix`      |
 
 > - IMPORTANTE: Ao decorrer do desenvolvimento deste serviço essa tabela pode ser modificada, adicionando ou removendo **Metodos e provedores de pagamento**
 
