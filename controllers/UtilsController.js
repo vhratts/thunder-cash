@@ -4,7 +4,10 @@ import ThunderPix, {
   PagarMeProvider,
   PicPayProvider,
   PixProvider,
-  PrimepagProvider
+  PrimepagProvider,
+  AsaasProvider,
+  ZendryProvider
+
 } from "thunderpix";
 import CieloPixProvider from "thunderpix/dist/providers/pix/CieloProvider";
 
@@ -94,6 +97,27 @@ export default {
         apiKey: null,
         isTest: true,
       }).providerInfo,
+    },
+    {
+      id: 8,
+      name: "Asaas",
+      methods: ["pix"],
+      provider: AsaasProvider,
+      authType: "basic",
+      authItens: ["apiKey", "isTest"],
+      info: new AsaasProvider({
+        apiKey: null,
+        isTest: true,
+      }).providerInfo,
+    },
+    {
+      id: 9,
+      name: "Zendry",
+      methods: ["pix"],
+      provider: ZendryProvider,
+      authType: "basic",
+      authItens: ["apiKey", "isTest"],
+      info: new ZendryProvider({ clientId: null, clientSecret: null }).providerInfo,
     },
   ],
 
