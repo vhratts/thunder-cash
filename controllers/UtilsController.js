@@ -4,7 +4,7 @@ import ThunderPix, {
   PagarMeProvider,
   PicPayProvider,
   PixProvider,
-  PrimepagProvider,
+  PrimepagProvider
 } from "thunderpix";
 import CieloPixProvider from "thunderpix/dist/providers/pix/CieloProvider";
 
